@@ -1,0 +1,35 @@
+Rebuy\Bundle\RuleBundle\Model\RebuyCopyAction:
+    constraints:
+        - \Akeneo\Pim\Automation\RuleEngine\Component\Validator\Constraint\PropertyAction: ~
+        - \Rebuy\Bundle\RuleBundle\Validator\Constraints\ExistingCopyFieldsConstraint: ~
+    properties:
+        fromField:
+           - Type:
+                type: string
+           - NotBlank:
+                message: The key "from_field" is missing or empty.
+           - Length:
+               max: 255
+        toField:
+           - Type:
+                type: string
+           - NotBlank:
+                message: The key "to_field" is missing or empty.
+           - Length:
+               max: 255
+        options:
+            - Collection:
+                allowExtraFields: true
+                fields:
+                    mapping_report_field:
+                        - Required:
+                            - NotBlank: ~
+                            - Length:
+                                max: 255
+                    fallback_attributes:
+                        - Optional:
+                            - All:
+                                - NotBlank: ~
+                                - Length:
+                                    max: 255
+

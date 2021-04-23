@@ -1,0 +1,29 @@
+services:
+    _instanceof:
+        Rebuy\Bundle\RuleBundle\AttributeMapper\AttributeMapperInterface:
+            tags: [ 'rebuy.rule.attribute_mapper' ]
+
+    Rebuy\Bundle\RuleBundle\AttributeMapper\BooleanAttributeMapper:
+        arguments: [ '%rebuy.rule.boolean_mapping%' ]
+
+    Rebuy\Bundle\RuleBundle\AttributeMapper\DateAttributeMapper: ~
+
+    Rebuy\Bundle\RuleBundle\AttributeMapper\MetricAttributeMapper:
+        arguments: [ '@akeneo_measure.provider.measurement_provider', '%rebuy.rule.metric_value_mappings%' ]
+
+    Rebuy\Bundle\RuleBundle\AttributeMapper\SimpleSelectAttributeMapper:
+        arguments: [ '%rebuy.rule.select_value_mappings%' ]
+
+    Rebuy\Bundle\RuleBundle\AttributeMapper\MultiSelectAttributeMapper:
+        arguments: [ '%rebuy.rule.select_value_mappings%' ]
+
+    Rebuy\Bundle\RuleBundle\AttributeMapper\NumberAttributeMapper: ~
+
+    Rebuy\Bundle\RuleBundle\AttributeMapper\TextAttributeMapper:
+        arguments: [ '%rebuy.rule.text_value_replacements%', '%rebuy.rule.text_value_mappings%' ]
+
+    Rebuy\Bundle\RuleBundle\Event\RebuyCopySubscriber:
+        arguments:
+            - '@pim_catalog.builder.entity_with_values'
+            - '@pim_catalog.repository.cached_attribute'
+        tags: [ kernel.event_subscriber ]

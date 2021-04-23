@@ -1,0 +1,51 @@
+services:
+    rebuy.rule.updater.copier.mappable_attribute_copier:
+        class: 'Rebuy\Bundle\RuleBundle\Copier\MappableAttributeCopier'
+        arguments:
+            - '@pim_catalog.builder.entity_with_values'
+            - '@pim_catalog.validator.helper.attribute'
+            - '@pim_standard_format_serializer'
+            - ['pim_catalog_textarea', 'pim_catalog_text', 'pim_catalog_boolean', 'pim_catalog_price_collection',
+               'pim_catalog_metric', 'pim_catalog_date', 'pim_catalog_number',
+               'pim_catalog_simpleselect', 'pim_catalog_multiselect']
+            - ['pim_catalog_textarea', 'pim_catalog_text', 'pim_catalog_boolean', 'pim_catalog_price_collection',
+               'pim_catalog_metric', 'pim_catalog_date', 'pim_catalog_number',
+               'pim_catalog_simpleselect', 'pim_catalog_multiselect']
+            - !tagged_iterator rebuy.rule.attribute_mapper
+        tags:
+            - { name: 'rebuy.rule.updater.copier' }
+
+    Rebuy\Bundle\RuleBundle\Copier\CopierRegistry:
+        arguments:
+            - '@pim_catalog.repository.cached_attribute'
+        calls:
+            - registerCollection: [!tagged_iterator rebuy.rule.updater.copier]
+            - registerCollection: [!tagged_iterator pim_catalog.updater.copier]
+
+    Rebuy\Bundle\RuleBundle\Copier\FallbackPropertyCopier:
+        arguments:
+            - '@pim_catalog.repository.cached_attribute'
+            - '@Rebuy\Bundle\RuleBundle\Copier\CopierRegistry'
+            - '@event_dispatcher'
+
+    Rebuy\Bundle\RuleBundle\ActionApplier\RebuyCopyActionApplier:
+        arguments:
+            - '@Rebuy\Bundle\RuleBundle\Copier\FallbackPropertyCopier'
+            - '@akeneo.pim.structure.query.get_attributes'
+            - '@event_dispatcher'
+        tags:
+            - { name: akeneo_rule_engine.action_applier, priority: 110 }
+
+    rebuy.rule.denormalizer.product_rule.copy_action:
+        class: '%pimee_catalog_rule.denormalizer.product_rule.action.class%'
+        arguments:
+            - 'Rebuy\Bundle\RuleBundle\Model\RebuyCopyAction'
+            - 'rb_copy'
+        tags:
+            - { name: 'pimee_catalog_rule.denormalizer.product_rule' }
+
+    Rebuy\Bundle\RuleBundle\Validator\ExistingCopyFieldsConstraintValidator:
+        arguments:
+            - '@Rebuy\Bundle\RuleBundle\Copier\CopierRegistry'
+        tags:
+            - { name: validator.constraint_validator, alias: rebuy_copy_fields_validator }

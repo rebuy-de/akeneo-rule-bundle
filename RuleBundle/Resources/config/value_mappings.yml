@@ -1,0 +1,16 @@
+parameters:
+    rebuy.rule.select_value_mappings:
+        YOUR_ATTRIBUTE_CODE_HERE:
+            'YOUR_INPUT': 'YOUR_DESIRED_OUTPUT'
+            'YOUR_UNDESIRED_INPUT': 'skip'
+    rebuy.rule.text_value_mappings:
+        YOUR_ATTRIBUTE_CODE_HERE:
+            'YOUR_INPUT': 'YOUR_DESIRED_OUTPUT'
+    rebuy.rule.boolean_mapping:
+        'fals': false
+        'ja': true
+        'nee': false
+        'nein': false
+        'no': false
+        'non': false
+        'oui': true
